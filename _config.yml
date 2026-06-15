@@ -1,0 +1,50 @@
+title: "5odead // CTF Writeups"
+description: "CTF writeups, exploit walkthroughs, and security research by 5odead — web, pwn, reversing, and more."
+url: "https://5odead.github.io"
+lang: en
+author: "5odead"
+github_username: 5odead
+
+permalink: /:title/
+
+markdown: kramdown
+highlighter: rouge
+kramdown:
+  syntax_highlighter: rouge
+
+twitter:
+  card: summary_large_image
+
+social:
+  name: 5odead
+  links:
+    - https://github.com/5odead
+
+plugins:
+  - jekyll-seo-tag
+  - jekyll-sitemap
+  - jekyll-feed
+
+include:
+  - pages
+
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - node_modules
+  - src
+  - package.json
+  - bun.lock
+  - bunfig.toml
+  - components.json
+  - eslint.config.js
+  - tsconfig.json
+  - vite.config.ts
+  - README.md
+
+defaults:
+  - scope:
+      path: ""
+      type: posts
+    values:
+      layout: post

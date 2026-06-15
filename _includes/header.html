@@ -1,0 +1,12 @@
+<header class="site-header">
+  <div class="container header-inner">
+    <a class="site-title" href="{{ '/' | relative_url }}"><span class="title-accent">5</span>odead</a>
+    <nav class="site-nav">
+      <form class="header-search" action="{{ '/search/' | relative_url }}" method="get" role="search">
+        <input type="text" name="q" class="header-search-input" placeholder="search..." aria-label="Search">
+        <a href="{{ '/search/' | relative_url }}" class="header-search-icon" aria-label="Search">⌕</a>
+      </form>
+      <a href="{{ '/about/' | relative_url }}" class="nav-link">About</a>
+    </nav>
+  </div>
+</header>

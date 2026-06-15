@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://5odead.github.io/sitemap.xml
