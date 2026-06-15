@@ -2,7 +2,7 @@
 layout: default
 title: About
 permalink: /about/
-description: "About 5odead — CTF player and security researcher publishing writeups on web, pwn, and reversing challenges."
+description: "About 5odead - Pentester and security researcher, figuring things out."
 ---
 <section class="about">
   <h1>About</h1>
