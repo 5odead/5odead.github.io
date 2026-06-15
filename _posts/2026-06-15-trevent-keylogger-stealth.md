@@ -21,6 +21,7 @@ A keylogger is a software or hardware tool that records your keystrokes as you t
 | Software Keylogger | Runs as a program or process on a system |
 | Hardware Keylogger | Physical device installed on a motherboard or between keyboard and computer |
 
+
 > ⚠️ **Disclaimer**: This post is intended for educational and cybersecurity research purposes only. The techniques and code discussed are designed for controlled testing on systems you own or have explicit permission to work on. Unauthorized use of keyloggers is illegal and unethical. The author does not take responsibility for any misuse.
 
 ## Initial Attempts
