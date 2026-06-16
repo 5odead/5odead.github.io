@@ -1,5 +1,5 @@
 (function () {
-  document.querySelectorAll('pre').forEach(function (pre) {
+  document.querySelectorAll('pre:not(.ascii-art)').forEach(function (pre) {
     if (pre.querySelector('.copy-btn')) return;
     const btn = document.createElement('button');
     btn.className = 'copy-btn';
