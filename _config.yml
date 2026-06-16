@@ -4,6 +4,7 @@ url: "https://5odead.github.io"
 lang: en
 author: "5odead"
 github_username: 5odead
+image: /assets/images/og-image.png
 
 permalink: /:title/
 
@@ -48,3 +49,7 @@ defaults:
       type: posts
     values:
       layout: post
+  - scope:
+      path: ""
+    values:
+      image: /assets/images/og-image.png
