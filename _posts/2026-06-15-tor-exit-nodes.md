@@ -90,7 +90,12 @@ This prevents Tor from using those countries at any position (entry, middle, or 
 | `ExcludeNodes ru,cn`     | Do not use Russia/China anywhere in the circuit                     |
 
 ## References
+1. **Tor Project Documentation** - Official guide for configuring and using Tor.
+   - [Tor Project Documentation](https://www.torproject.org/docs/tor-manual.html.en)
 
-- Tor Project Documentation — official config guide  
-- Tor Network Overview — how relays and circuits work  
-- Country codes list — ISO-2 codes for `ExitNodes`/`ExcludeExitNodes`
+2. **Tor Network Overview** - Overview of how the Tor network operates.
+   - [Tor Network Overview](https://www.torproject.org/about/overview.html.en)
+
+3. **Country Codes** - Snippets and codes available at:
+   - [Country List](https://sccmrookie.blogspot.com/2016/03/tor-country-codes-list.html)
+   - [Snippets](https://communitydocs.accessnow.org/147-Tor_force_exit_nodes.html#problem)
