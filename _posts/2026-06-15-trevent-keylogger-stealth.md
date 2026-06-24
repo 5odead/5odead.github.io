@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Keylogging: A Practical Approach"
-date: 2026-06-15
+date: 2025-04-14
 last_modified_at: 2026-06-15
 tags: [keylogging, linux, evdev, cybersecurity]
 description: "Building a Linux keylogger from scratch: switching from pynput to evdev for system-wide capture, Telegram Bot exfiltration, volatile storage in /dev/shm, and stealth-oriented file naming."
