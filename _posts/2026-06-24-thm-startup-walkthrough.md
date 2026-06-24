@@ -7,6 +7,9 @@ tags: [tryhackme, thm, startup, ffuf, directory-enumeration, privilege-escalatio
 description: "Step-by-step walkthrough of TryHackMe's Startup machine: directory enumeration with ffuf, finding an exposed /files directory, and working towards privilege escalation."
 ---
 
+<img width="1626" height="296" alt="Screenshot_20260624_145047" src="https://github.com/user-attachments/assets/fcbaf3a9-eab2-43a1-8b2e-0fe353f0e9c0" />
+
+
 ## Disclaimer
 
 This walkthrough is for educational purposes only. All activities were performed on legally authorised TryHackMe systems.
@@ -37,18 +40,15 @@ Here are the results:
 
 <img width="1143" height="645" alt="Screenshot_20260621_224440" src="https://github.com/user-attachments/assets/d4ddbcf1-2956-4eb7-bc3c-11646be86333" />
 
-
 ## Exploring /files
 
 There's a `/files` directory. I copied the URL and opened it in my browser:
 
 <img width="941" height="603" alt="Screenshot_20260621_223327" src="https://github.com/user-attachments/assets/d4d1b88d-9ad1-4933-8565-fc449e68ffa3" />
 
-
 I open the notice.txt. There's a name mentioned here — **Maya**. Interesting. I checked around the other files and directories, but nothing stood out. Meanwhile, my Nmap scan finished. Here are the scan results
 
 <img width="1730" height="216" alt="Screenshot_20260621_224623" src="https://github.com/user-attachments/assets/5b6ebebd-9427-41e1-bceb-7e769cb24a30" />
-
 
 Meanwhile, my Nmap scan finished. Here are the scan results
 
@@ -68,10 +68,22 @@ I fired up Metasploit, found this SSH username enumerator in scanners/ssh/ssh_en
 
 Something felt off, so I decided to set the username as "rfvewbfibk" and hit run again. Only for the result to say USER rfvewbfibk Found. Now I knew something was wrong. I went online, tried many CVE-2016-6210 exploits, but nothing worked because there was an issue in Python's paramiko library. I tried every tool I could find online, and I used Python virtual environment to install requirements, but they still didn't work. I tried forcefully installing it on the main Python, but they still didn't work
 
-IMAGE
+<img width="1689" height="910" alt="Screenshot_20260624_180923" src="https://github.com/user-attachments/assets/208f47b0-e909-41d7-affc-72a6e4bd1ccb" />
 
-I thought, let's get AI to exploit this vulnerability. Gemini generated the code for me. I was confident it would work, and I hit enter as see MAYA FOUND. Let's gooo, I decided to cross-check it before moving on, so I put a random string as Username again, and yes you could guess. It found that as a username too. This time i chose not to fall into the rabbit hole of solving bugs in code i found online like i did last time so i went a step back back, No more SSH, back to FTP. I started rechecking my process again, how I reached the FTP server, did I miss anything in between, any bug in the website, any port ignored? I started reading the Nmap scan result again and saw it. I'm sharing it again. Do you see it?
+I thought, let's get AI to exploit this vulnerability. Gemini generated the code for me. I was confident it would work, and I hit enter as I saw MAYA FOUND. Let's gooo,
+
+<img width="1450" height="914" alt="Screenshot_20260624_181142" src="https://github.com/user-attachments/assets/8de15e1d-3076-47aa-b51a-5210b90096cd" />
+
+I decided to cross-check it before moving on, so I put a random string as Username again, and yes, you could guess. It found that as a username too. This time i chose not to fall into the rabbit hole of solving bugs in code i found online like i did last time so i went a step back back, No more SSH, back to FTP. I started rechecking my process again, how I reached the FTP server, did I miss anything in between, any bug in the website, any port ignored? I started reading the Nmap scan result again and saw it. I'm sharing it again. Do you see it?
 
 <img width="1403" height="575" alt="image" src="https://github.com/user-attachments/assets/f25f7207-4e23-4841-bcdd-354a781fae5b" />
 
-The ftp Directory is writeable. I logged back in to FTP, uploaded Linpeas.sh and Pentest Monkey PHP_reverse shell to get a reverse shell back to my system because I was confident that PHP is installed and
+The ftp Directory is writeable. I logged back in to FTP, uploaded Linpeas.sh and Pentest Monkey PHP_reverse shell file to  the file/ftp directory to get a reverse shell back to my system because I was confident that PHP is installed. I started a netcat listener, went to the site, clicked the payload.php
+
+<img width="1362" height="659" alt="image" src="https://github.com/user-attachments/assets/2009792e-eeff-47ee-9e79-569e006f0bd8" />
+
+And I was in the mainframe lol. I got a successful reverse shell connection. I went to the ftp directory and executed LinPEAS.sh . Here is something i found interesting.
+
+<img width="1061" height="401" alt="Screenshot_20260622_013852" src="https://github.com/user-attachments/assets/1fa62f3d-80ac-4053-a6d1-fb455ca18843" />
+
+If you have experience with linux and know how it file system looks like you will spot it in no time. There is a /incidents directory. Strange, i decicided to check it and found a file called suspicious.pcapng. I downloaded it to my system and opened it with Wireshark
