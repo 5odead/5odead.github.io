@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "A Beginner's Guide to Tor Exit Nodes"
-date: 2026-06-15
+date: 2024-10-19
 last_modified_at: 2026-06-15
 tags: [tor, privacy, networking]
 description: "How Tor exit nodes work, why you might pick a specific country, and exact torrc config snippets for ExitNodes, StrictNodes, and ExcludeExitNodes."
