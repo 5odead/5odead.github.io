@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Anti-Detect Browsers"
-date: 2026-06-15
+date: 2024-10-03
 last_modified_at: 2026-06-15
 tags: [cybersecurity, anonymity, fraud]
 description: "How anti-detect browsers hide digital fingerprints, the tools hackers use, and the illicit activities they enable—from credential stuffing to botting."
