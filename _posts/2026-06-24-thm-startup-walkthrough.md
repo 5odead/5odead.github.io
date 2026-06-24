@@ -78,12 +78,30 @@ I decided to cross-check it before moving on, so I put a random string as Userna
 
 <img width="1403" height="575" alt="image" src="https://github.com/user-attachments/assets/f25f7207-4e23-4841-bcdd-354a781fae5b" />
 
-The ftp Directory is writeable. I logged back in to FTP, uploaded Linpeas.sh and Pentest Monkey PHP_reverse shell file to  the file/ftp directory to get a reverse shell back to my system because I was confident that PHP is installed. I started a netcat listener, went to the site, clicked the payload.php
+The ftp Directory is writeable. I logged back in to FTP, uploaded Linpeas.sh and Pentest Monkey PHP_reverse shell file to  the file/ftp directory to get a reverse shell back to my system because I was confident that PHP is installed. I started a netcat listener, went to the site, and clicked the payload.php
 
 <img width="1362" height="659" alt="image" src="https://github.com/user-attachments/assets/2009792e-eeff-47ee-9e79-569e006f0bd8" />
 
-And I was in the mainframe lol. I got a successful reverse shell connection. I went to the ftp directory and executed LinPEAS.sh . Here is something i found interesting.
+And I was in the mainframe lol. I got a successful reverse shell connection. I went to the ftp directory and executed LinPEAS.sh. Here is something I found interesting.
 
 <img width="1061" height="401" alt="Screenshot_20260622_013852" src="https://github.com/user-attachments/assets/1fa62f3d-80ac-4053-a6d1-fb455ca18843" />
 
-If you have experience with linux and know how it file system looks like you will spot it in no time. There is a /incidents directory. Strange, i decicided to check it and found a file called suspicious.pcapng. I downloaded it to my system and opened it with Wireshark
+If you have experience with Linux and know what its file system looks like, you will spot it in no time. There is a /incidents directory. Strange, I decided to check it and found a file called suspicious.pcapng. I downloaded it to my system and opened it in Wireshark.
+
+<img width="1919" height="1060" alt="Screenshot_20260624_213703" src="https://github.com/user-attachments/assets/74a50856-a35d-4e8a-8cd9-f2c2f255535b" />
+
+There are lots of things going on in it. First, I tried going through HTTP packets, but didn't find much. Then, I tried different filters to search for the password as a string, but still nothing. At last, I followed the TCP Packet stream, and I got what's going on
+
+<img width="1920" height="1040" alt="Screenshot_20260622_020951" src="https://github.com/user-attachments/assets/7a2e3b6f-f26f-4c96-a896-931207fa09be" />
+
+There is a user named Lennie, too, and her password was captured in plaintext, so I copied the password and, without wasting a second, SSHed into the system with her credentials & found the user flag
+
+<img width="1740" height="747" alt="Screenshot_20260622_022606-1" src="https://github.com/user-attachments/assets/66791986-0eb8-4e47-ad9f-20ef9e4dd19c" />
+
+Now it was time to get the root flag. I explored Lennie's files, but what caught my eye was the scripts folder. Inside it, I found another script called planner.sh, I opened it and saw that it executes another script with a bit unusual permissions - /etc/print.sh (seemed like a cronjob to me)
+
+<img width="541" height="270" alt="crop" src="https://github.com/user-attachments/assets/6a218c9b-4c8e-4993-897f-7bd65639d1b0" />
+
+I put a line to get Bash reverse_shell in it, saved it and started a netcat listener. After a minute, I got the reverse_shell and I found the root flag
+
+<img width="1886" height="1012" alt="Screenshot_20260622_030328" src="https://github.com/user-attachments/assets/dabc91b9-4091-4ac7-904f-88caf4e086b2" />
