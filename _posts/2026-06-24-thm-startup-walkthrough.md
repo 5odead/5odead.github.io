@@ -67,4 +67,4 @@ I thought let's get AI to exploit this vulnerability , Gemini generated the code
 
 <img width="1403" height="575" alt="image" src="https://github.com/user-attachments/assets/f25f7207-4e23-4841-bcdd-354a781fae5b" />
 
-The ftp Directory is writeable. I logged in back to FTP uploaded Linpeas.sh and Pentest Monkey PHP_reverse shell
+The ftp Directory is writeable. I logged in back to FTP uploaded Linpeas.sh and Pentest Monkey PHP_reverse shell to get a reverse shell back to my system because i was confident that PHP is installed and
