@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "How I Solved HTB: Cap Machine"
-date: 2026-06-15
+date: 2026-06-14
 last_modified_at: 2026-06-15
 tags: [hackingthebox, htb, cap, idor, privilege-escalation, python-capsetuid]
 description: "Step-by-step walkthrough of Hack The Box's Cap machine: discovering IDOR via pcap download, extracting FTP credentials from Wireshark, attempting CVE-2021-3156 (Baron Samedit), and exploiting Python's cap_setuid capability for root access."
