@@ -1,4 +1,4 @@
-<img width="1450" height="914" alt="Screenshot_20260624_181142" src="https://github.com/user-attachments/assets/f7b6394c-5602-46ba-9eb5-f8067e752a37" /><img width="1337" height="603" alt="Screenshot_20260621_231029" src="https://github.com/user-attachments/assets/a4ec4152-aa96-43f3-b1ea-cfb0f138a77b" /><img width="1403" height="700" alt="Screenshot_20260624_145745" src="https://github.com/user-attachments/assets/4621dd3b-ac9c-4d1c-a6ad-e53823aa2fd2" />---
+---
 layout: post
 title: "How I Solved THM: Startup"
 date: 2026-06-24
