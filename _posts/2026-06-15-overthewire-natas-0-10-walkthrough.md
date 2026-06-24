@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "OverTheWire Natas: Levels 0–10 Walkthrough"
-date: 2026-06-15
+date: 2026-05-26
 last_modified_at: 2026-06-15
 tags: [web, sqli, natas, overthewire]
 description: "Step-by-step walkthrough of OverTheWire's Natas wargame levels 0–10: source code disclosure, file inclusion, referer manipulation, cookie tampering, file path traversal, base64 reversal, command injection, and grep manipulation."
